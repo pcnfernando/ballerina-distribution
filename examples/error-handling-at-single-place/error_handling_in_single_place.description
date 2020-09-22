@@ -3,5 +3,3 @@
 // On fail will be executed if the block statement following supported statement fails.
 // The type of error caught from on-fail clause will be union of the error types that can be
 // returned by the block statement.
-
-

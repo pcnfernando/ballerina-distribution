@@ -2,10 +2,10 @@ import ballerina/http;
 import ballerina/io;
 
 public function main() {
-    // Creates a new [WebSocket client](https://ballerina.io/swan-lake/learn/api-docs/ballerina/http/clients/WebSocketClient.html) with the backend URL and assigns a callback service.
+    // Creates a new [WebSocket client](https://ballerina.io/swan-lake/learn/api-docs/ballerina/#/http/clients/WebSocketClient) with the backend URL and assigns a callback service.
     http:WebSocketClient wsClientEp = new ("ws://echo.websocket.org",
                             config = {callbackService: ClientService});
-    // Pushes a text message to the server using [pushText](https://ballerina.io/swan-lake/learn/api-docs/ballerina/http/clients/WebSocketClient.html#pushText).
+    // Pushes a text message to the server using [pushText](https://ballerina.io/swan-lake/learn/api-docs/ballerina/#/http/clients/WebSocketClient#pushText).
     var err = wsClientEp->pushText("Hello World!");
     if (err is error) {
         // Prints the error.
@@ -16,7 +16,8 @@ public function main() {
 service ClientService = @http:WebSocketServiceConfig {} service {
 
     // This resource is triggered when a new text frame is received from the remote backend.
-    resource function onText(http:WebSocketClient conn, string text, boolean finalFrame) {
+    resource function onText(http:WebSocketClient conn, string text,
+                             boolean finalFrame) {
         io:println(text);
     }
     // This is triggered if an error occurs.

@@ -1,15 +1,17 @@
 import ballerina/http;
 import ballerina/log;
 
-// The HTTP client's chunking behavior can be configured as [CHUNKING_AUTO](https://ballerina.io/swan-lake/learn/api-docs/ballerina/http/constants.html#CHUNKING_AUTO),
-// [CHUNKING_ALWAYS](https://ballerina.io/swan-lake/learn/api-docs/ballerina/http/constants.html#CHUNKING_ALWAYS),
-// or [CHUNKING_NEVER](https://ballerina.io/swan-lake/learn/api-docs/ballerina/http/constants.html#CHUNKING_NEVER).
+// The HTTP client's chunking behavior can be configured as [CHUNKING_AUTO](https://ballerina.io/swan-lake/learn/api-docs/ballerina/#/http/constants#CHUNKING_AUTO),
+// [CHUNKING_ALWAYS](https://ballerina.io/swan-lake/learn/api-docs/ballerina/#/http/constants#CHUNKING_ALWAYS),
+// or [CHUNKING_NEVER](https://ballerina.io/swan-lake/learn/api-docs/ballerina/#/http/constants#CHUNKING_NEVER).
 // In this example, it is set to `CHUNKING_NEVER`, which means that chunking never happens irrespective of how it is
 // specified in the request. When chunking is set to `CHUNKING_AUTO`, chunking is done as specified in the request.
-// [http1Settings](https://ballerina.io/swan-lake/learn/api-docs/ballerina/http/records/ClientHttp1Settings.html) annotation
+// [http1Settings](https://ballerina.io/swan-lake/learn/api-docs/ballerina/#/http/records/ClientHttp1Settings) annotation
 // provides the chunking-related configurations.
 http:Client clientEndpoint = new ("http://localhost:9090",
-                                  {http1Settings: {chunking: http:CHUNKING_NEVER}});
+                                    {http1Settings:
+                                        {chunking: http:CHUNKING_NEVER}}
+                                  );
 
 service chunkingSample on new http:Listener(9092) {
 
@@ -22,13 +24,14 @@ service chunkingSample on new http:Listener(9092) {
         newReq.setPayload({"name": "Ballerina"});
         var clientResponse = clientEndpoint->post("/echo/", newReq);
         if (clientResponse is http:Response) {
-            var result = caller->respond(clientResponse);
+            var result = caller->respond(<@untainted>clientResponse);
             if (result is error) {
                 log:printError("Error sending response", result);
             }
         } else {
             http:Response errorResponse = new;
-            json msg = {"error": "An error occurred while invoking the service."};
+            json msg =
+                {"error": "An error occurred while invoking the service."};
             errorResponse.setPayload(msg);
             var response = caller->respond(errorResponse);
             if (response is error) {

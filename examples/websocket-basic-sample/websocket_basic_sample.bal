@@ -16,7 +16,8 @@ service basic on new http:Listener(9090) {
     resource function onOpen(http:WebSocketCaller caller) {
         io:println("\nNew client connected");
         io:println("Connection ID: " + caller.getConnectionId());
-        io:println("Negotiated Sub protocol: " + caller.getNegotiatedSubProtocol().toString());
+        io:println("Negotiated Sub protocol: " +
+                    caller.getNegotiatedSubProtocol().toString());
         io:println("Is connection open: " + caller.isOpen().toString());
         io:println("Is connection secured: " + caller.isSecure().toString());
     }
@@ -25,7 +26,7 @@ service basic on new http:Listener(9090) {
     resource function onText(http:WebSocketCaller caller, string text,
                                 boolean finalFrame) {
         io:println("\ntext message: " + text + " & final fragment: "
-                                                        + finalFrame.toString());
+                                                    + finalFrame.toString());
         if (text == "ping") {
             io:println("Pinging...");
             var err = caller->ping(pingData);
@@ -37,7 +38,8 @@ service basic on new http:Listener(9090) {
                             reason = "You asked me to close the connection",
                             timeoutInSeconds = 0);
             if (result is http:WebSocketError) {
-                log:printError("Error occurred when closing connection", result);
+                log:printError("Error occurred when closing connection",
+                                result);
             }
         } else {
             var err = caller->pushText("You said: " + text);
@@ -59,7 +61,7 @@ service basic on new http:Listener(9090) {
     }
 
     // This `resource` is triggered when a ping message is received from the client. If this resource is not implemented,
-    // a pong message is automatically sent to the connected [http:WebSocketCaller](https://ballerina.io/swan-lake/learn/api-docs/ballerina/http/clients/WebSocketCaller.html) when a ping is received.
+    // a pong message is automatically sent to the connected [http:WebSocketCaller](https://ballerina.io/swan-lake/learn/api-docs/ballerina/#/http/clients/WebSocketCaller) when a ping is received.
     resource function onPing(http:WebSocketCaller caller, byte[] data) {
         var err = caller->pong(data);
         if (err is http:WebSocketError) {
@@ -73,7 +75,7 @@ service basic on new http:Listener(9090) {
     }
 
     // This resource is triggered when a particular client reaches the idle timeout that is defined in the
-    // [http:WebSocketServiceConfig](https://ballerina.io/swan-lake/learn/api-docs/ballerina/http/annotations.html#WebSocketServiceConfig) annotation.
+    // [http:WebSocketServiceConfig](https://ballerina.io/swan-lake/learn/api-docs/ballerina/#/http/annotations#WebSocketServiceConfig) annotation.
     resource function onIdleTimeout(http:WebSocketCaller caller) {
         io:println("\nReached idle timeout");
         io:println("Closing connection " + caller.getConnectionId());

@@ -17,13 +17,17 @@
 import ballerina/grpc;
 import ballerina/log;
 
+@grpc:ServiceDescriptor {
+    descriptor: ROOT_DESCRIPTOR,
+    descMap: getDescriptorMap()
+}
 service HelloWorld on new grpc:Listener(20005) {
 
     isolated resource function lotsOfGreetings(grpc:Caller caller,
                             stream<string,error> clientStream) {
         log:printInfo("Client connected sucessfully.");
         //Read and process each message in the client stream
-        error? e = clientStream.forEach(function(string name) {
+        error? e = clientStream.forEach(isolated function(string name) {
             log:printInfo("Server received greet: " + name);
         });
 

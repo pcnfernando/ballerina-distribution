@@ -2,7 +2,7 @@ import ballerina/http;
 import ballerina/log;
 
 // Creates an HTTP client to interact with a remote endpoint.
-// [followRedirects](https://ballerina.io/swan-lake/learn/api-docs/ballerina/http/records/FollowRedirects.html) record provides configurations associated with HTTP redirects.
+// [followRedirects](https://ballerina.io/swan-lake/learn/api-docs/ballerina/#/http/records/FollowRedirects) record provides configurations associated with HTTP redirects.
 http:Client clientEndpoint = new ("http://localhost:9092", {
         followRedirects: {enabled: true, maxCount: 5}
     }
@@ -34,8 +34,8 @@ service hello on new http:Listener(9090) {
                 }
             }
         } else {
-            var result = caller->respond("Error in connection : " 
-                                + returnResult.message());
+            var result = caller->respond("Error in connection : "
+                            + (<@untainted error>returnResult).message());
             if (result is error) {
                 log:printError("Error in responding", result);
             }

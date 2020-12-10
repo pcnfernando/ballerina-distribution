@@ -246,6 +246,10 @@
             {
                 "name": "Let Expression",
                 "url": "let-expression"
+            },
+            {
+                "name": "Configurable Variables",
+                "url": "configurable"
             }
         ]
     },
@@ -297,7 +301,7 @@
             },
             {
                 "name": "Object type",
-                "url": "objects"
+                "url": "object-type"
             },
             {
                 "name": "Object Constructor Expressions",
@@ -459,6 +463,10 @@
                 "url": "error-handling"
             },
             {
+                "name": "Fail",
+                "url": "fail"
+            },
+            {
                 "name": "Check",
                 "url": "check"
             },
@@ -521,10 +529,65 @@
         ]
     },
     {
+        "title": "Isolation",
+        "column": 2,
+        "category": "Language concepts",
+        "samples": [
+            {
+                "name": "Isolated Objects",
+                "url": "isolated-objects"
+            },
+            {
+                "name": "Isolated Variables",
+                "url": "isolated-variables"
+            },
+            {
+                "name": "Isolated Functions",
+                "url": "isolated-functions"
+            }
+        ]
+    },
+    {
+        "title": "Java Interoperability",
+        "column": 2,
+        "category": "Language concepts",
+        "samples": [
+            {
+                "name": "Create Java Objects",
+                "url": "create-java-objects"
+            },
+            {
+                "name": "Invoke Java Methods",
+                "url": "invoke-java-methods"
+            },
+            {
+                "name": "Access/Mutate Java Fields",
+                "url": "access-mutate-java-fields"
+            },
+            {
+                "name": "Java Arrays",
+                "url": "java-arrays"
+            },
+            {
+                "name": "Java Varargs",
+                "url": "java-varargs"
+            },
+            {
+                "name": "Overloaded Methods/Constructors",
+                "url": "overloaded-methods-constructors"
+            },
+            {
+                "name": "Java Exceptions",
+                "url": "java-exceptions"
+            }
+        ]
+    },
+    {
         "title": "I/O",
         "column": 3,
         "category": "Language concepts",
-        "samples": [{
+        "samples": [
+            {
                 "name": "Byte I/O",
                 "url": "byte-io"
             },
@@ -549,47 +612,8 @@
                 "url": "xml-io"
             },
             {
-                "name": "Read/Write Files",
-                "url": "character-io"
-            },
-            {
-                "name": "JSON to CSV Transform",
-                "url": "json-csv"
-            }
-        ]
-    },
-    {
-        "title": "Java Interoperability",
-        "column": 2,
-        "category": "Language concepts",
-        "samples": [
-            {
-                "name": "Create Java Objects",
-                "url": "create-java-objects"
-            },
-            {
-                "name": "Invoke Java Methods",
-                "url": "invoke-java-methods"
-            },
-            {
-                "name": "Access/Mutate Java Fields",
-                "url": "access-mutate-java-fields"
-            },
-            {
-                "name": "Java Arrays",
-                "url": "java.arrays"
-            },
-            {
-                "name": "Java Varargs",
-                "url": "java-varargs"
-            },
-            {
-                "name": "Overloaded Methods/Constructors",
-                "url": "overloaded-methods-constructors"
-            },
-            {
-                "name": "Java Exceptions",
-                "url": "java-exceptions"
+                "name": "File I/O",
+                "url": "file-io"
             }
         ]
     },
@@ -729,24 +753,14 @@
                 "githubLink": "https://github.com/ballerina-platform/module-ballerina-docker/tree/master/docker-extension-examples/examples/docker-deployment"
             },
             {
-                "name": "Kubernetes Deployment",
-                "url": "kubernetes-deployment",
-                "githubLink": "https://github.com/ballerina-platform/module-ballerina-kubernetes/tree/master/kubernetes-extension-examples/examples/kubernetes-deployment"
-            },
-            {
-                "name": "OpenShift Deployment",
-                "url": "openshift-deployment",
-                "githubLink": "https://github.com/ballerina-platform/module-ballerina-kubernetes/tree/master/kubernetes-extension-examples/examples/openshift-deployment"
+                "name": "Code to Cloud Deployment",
+                "url": "c2c-deployment",
+                "githubLink": "https://github.com/ballerina-platform/module-ballerina-c2c/tree/master/c2c-extension-examples/examples/c2c-deployment"
             },
             {
                 "name": "AWS Lambda Deployment",
                 "url": "aws-lambda-deployment",
                 "githubLink": "https://github.com/ballerina-platform/module-ballerinax-aws.lambda/tree/master/awslambda-extension-examples/examples/aws-lambda-deployment"
-            },
-            {
-                "name": "Knative Deployment",
-                "url": "knative-deployment",
-                "githubLink": "https://github.com/ballerina-platform/module-ballerina-kubernetes/tree/master/kubernetes-extension-examples/examples/knative-deployment"
             },
             {
                 "name": "Azure Functions",
@@ -788,6 +802,10 @@
             {
                 "name": "Redirects",
                 "url": "http-redirects"
+            },
+            {
+                "name": "Client Data Binding",
+                "url": "http-client-data-binding"
             },
             {
                 "name": "Base Path and Path",
@@ -842,7 +860,7 @@
                 "url": "http-access-logs"
             },
             {
-                "name": "Data Binding",
+                "name": "Service Data Binding",
                 "url": "http-data-binding"
             },
             {
@@ -1099,32 +1117,10 @@
         ]
     },
  	{
-        "title": "Observability",
-        "column": 2,
-        "category": "Working over the network",
-        "samples": [{
-                "name": "Distributed Tracing",
-                "url": "tracing"
-            },
-            {
-                "name": "Counter-Based Metrics",
-                "url": "counter-metrics"
-            },
-            {
-                "name": "Gauge-Based Metrics",
-                "url": "gauge-metrics"
-            }
-        ]
-    },
- 	{
         "title": "OpenAPI",
         "column": 2,
         "category": "Working over the network",
         "samples": [{
-                "name": "Client Generation",
-                "url": "client-generation"
-            },
-            {
                 "name": "Ballerina To OpenAPI",
                 "url": "ballerina-to-openapi"
             },

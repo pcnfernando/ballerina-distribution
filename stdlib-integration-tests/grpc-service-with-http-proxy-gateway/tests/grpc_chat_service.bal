@@ -34,13 +34,18 @@ listener grpc:Listener ep3 = new (20007, {
       }
   });
 
-@tainted map<grpc:Caller> connectionsMap = {};
+@tainted final map<grpc:Caller> connectionsMap = {};
+
 boolean initialized = false;
 
 @grpc:ServiceConfig {name:"Chat"}
+@grpc:ServiceDescriptor {
+    descriptor: ROOT_DESCRIPTOR,
+    descMap: getDescriptorMap()
+}
 service Chat on ep3 {
 
-    isolated resource function chat(grpc:Caller caller, stream<ChatMessage, error> clientStream) {
+    resource function chat(grpc:Caller caller, stream<ChatMessage, error> clientStream) {
         log:printInfo(string `${caller.getId()} connected to chat`);
         connectionsMap[caller.getId().toString()] = caller;
         log:printInfo("Client registration completed. Connection map status");

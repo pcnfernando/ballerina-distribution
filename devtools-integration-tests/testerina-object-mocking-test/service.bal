@@ -5,16 +5,9 @@ listener http:Listener httpListener = new(9117);
 
 map<json> ordersMap = {};
 
-@http:ServiceConfig {
-    basePath: "/ordermgt"
-}
-service OrderManagementService on httpListener {
+service /ordermgt on httpListener {
 
-    @http:ResourceConfig {
-        methods: ["GET"],
-        path: "/order/{orderId}"
-    }
-    resource function find(http:Caller caller, http:Request req, string orderId) {
+    resource function get 'order/[string orderId](http:Caller caller, http:Request req) {
         json? payload = ordersMap[orderId];
         http:Response response = new;
         if (payload == null) {
@@ -29,15 +22,19 @@ service OrderManagementService on httpListener {
         }
     }
 
-    @http:ResourceConfig {
-        methods: ["POST"],
-        path: "/order"
-    }
-    resource function add(http:Caller caller, http:Request req) {
+    resource function post 'order(http:Caller caller, http:Request req) {
         http:Response response = new;
         var orderReq = req.getJsonPayload();
         if (orderReq is json) {
-            string orderId = orderReq.Order.ID.toString();
+            json|error orderIdJson = orderReq.Order.ID;
+            string orderId = "";
+
+            if (orderIdJson is json) {
+                orderId = orderIdJson.toString();
+            } else {
+                log:printError("Error sending response", err = orderIdJson);
+            }
+
             ordersMap[orderId] = <@untainted> orderReq;
 
             json payload = { status: "Order Created.", orderId: orderId };

@@ -4,19 +4,13 @@ import ballerinax/nats;
 // Produces a message to a subject in the NATS sever.
 public function main() returns error? {
     string message = "Hello from Ballerina";
-    // Initializes a producer.
-    nats:Connection connection = new ();
-    nats:Producer producer = new (connection);
+    // Initializes a client.
+    nats:Client natsClient = check new;
     // Produces a message to the specified subject.
-    nats:Error? result = producer->publish("demo.bbe.subject",
-                                            <@untainted>message);
-    if (result is nats:Error) {
-        io:println("Error occurred while producing the message.");
-    } else {
-        io:println("Message published successfully.");
-    }
+    check natsClient->publisher->publishMessage({
+                             content: <@untainted>message.toBytes(),
+                             subject: "demo.bbe.subject"});
 
-    // Closes the publisher connection.
-    check producer.close();
-    check connection.close();
+    // Closes the client connection.
+    check natsClient.close();
 }

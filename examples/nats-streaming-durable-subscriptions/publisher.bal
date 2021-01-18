@@ -1,22 +1,23 @@
 import ballerina/io;
-import ballerinax/nats;
+import ballerinax/stan;
 
 // Represents the escape character.
 const string ESCAPE = "!q";
 
-// Produces a message to a subject in the NATS sever.
+// Produces a message to a subject in the NATS Streaming sever.
 public function main() returns error? {
     string message = "";
-    nats:Connection conn = new;
-    nats:StreamingProducer publisher = new (conn);
+    stan:Client publisher = check new;
 
     while (message != ESCAPE) {
         message = io:readln("Message: ");
         if (message != ESCAPE) {
             // Produces a message to the specified subject.
-            string|nats:Error result = publisher->publish("demo",
-                                                        <@untainted>message);
-            if (result is nats:Error) {
+            string|stan:Error result =
+                            publisher->publishMessage({
+                                    content: <@untainted>message.toBytes(),
+                                    subject: "demo"});
+            if (result is stan:Error) {
                 io:println("Error occurred while producing the message.");
             } else {
                 io:println("GUID " + result +
@@ -24,7 +25,4 @@ public function main() returns error? {
             }
         }
     }
-
-    // Closes the connection.
-    check conn.close();
 }

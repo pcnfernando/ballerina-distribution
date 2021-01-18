@@ -14,32 +14,44 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import ballerina/runtime;
+import ballerina/lang.runtime as runtime;
 import ballerina/test;
 import ballerina/http;
+import ballerina/websocket;
+import ballerina/io;
 
 string data = "";
 
-service onTextString on new http:Listener(21003) {
+service /onTextString on new websocket:Listener(21003) {
+   resource isolated function get .(http:Request req) returns websocket:Service|websocket:Error {
+       return new WsService1();
+   }
+}
 
-    resource function onText(http:WebSocketCaller caller, string data, boolean finalFrame) {
-        checkpanic caller->pushText(data);
+service class WsService1 {
+  *websocket:Service;
+  remote isolated function onString(websocket:Caller caller, string data) {
+      checkpanic caller->writeString(data);
+  }
+}
+
+service class clientPushCallbackService {
+    *websocket:Service;
+    remote function onString(websocket:Caller wsEp, string text) {
+        data = <@untainted>text;
+    }
+
+    remote isolated function onError(websocket:Caller wsEp, error err) {
+        io:println(err);
     }
 }
 
-service clientPushCallbackService = @http:WebSocketServiceConfig {} service {
-
-    resource function onText(http:WebSocketClient wsEp, string text) {
-        data = <@untainted>text;
-    }
-};
-
-// Tests string support for pushText and onText
+// Tests string support for writeString and onString
 @test:Config {}
-public function testString() {
-    http:WebSocketClient wsClient = new ("ws://localhost:21003/onTextString", {callbackService: clientPushCallbackService});
-    checkpanic wsClient->pushText("Hi");
-    runtime:sleep(500);
+public function testWebsocketString() returns websocket:Error? {
+    websocket:AsyncClient wsClient = check new ("ws://localhost:21003/onTextString", new clientPushCallbackService());
+    checkpanic wsClient->writeString("Hi");
+    runtime:sleep(5);
     test:assertEquals(data, "Hi", msg = "Failed pushtext");
     var closeResp = wsClient->close(statusCode = 1000, reason = "Close the connection", timeoutInSeconds = 180);
 }

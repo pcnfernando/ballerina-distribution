@@ -1,25 +1,26 @@
 import ballerina/test;
-import ballerina/http;
 import ballerina/log;
-import ballerina/runtime;
+import ballerina/lang.runtime as runtime;
+import ballerina/websocket;
 
 string serviceReply = "";
 string msg = "hey";
 
 @test:Config {}
-function testText() {
-    http:WebSocketClient wsClient = new("ws://localhost:9090/basic/ws", {callbackService:callback,
-    subProtocols:["xml", "my-protocol"]});
-    http:WebSocketError? result = wsClient->pushText(msg);
-    if (result is http:WebSocketError) {
-        log:printError("Error occurred when pushing text", <error> result);
+function testText() returns websocket:Error? {
+    websocket:AsyncClient wsClient = check new("ws://localhost:9090/basic/ws", new callback(),
+    {subProtocols:["xml", "my-protocol"]});
+    websocket:Error? result = wsClient->writeString(msg);
+    if (result is websocket:Error) {
+        log:printError("Error occurred when pushing text", err = result);
     }
-     runtime:sleep(4000);
+    runtime:sleep(4);
     test:assertEquals(serviceReply, "You said: " + msg, "Received message should be equal to the expected message");
 }
 
-service callback = @http:WebSocketServiceConfig {} service {
-    resource function onText(http:WebSocketClient conn, string text, boolean finalFrame) {
+service class callback {
+    *websocket:Service;
+    remote function onString(websocket:Caller conn, string text, boolean finalFrame) {
         serviceReply = <@untainted>text;
     }
-};
+}

@@ -25,7 +25,7 @@ import org.ballerinalang.debugger.test.utils.DebugUtils;
 import org.ballerinalang.test.context.BallerinaTestException;
 import org.eclipse.lsp4j.debug.StoppedEventArguments;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -47,7 +47,7 @@ public class ServiceDebugTest extends BaseTestCase {
         debugTestRunner = new DebugTestRunner(testProjectName, testModuleFileName, true);
     }
 
-    @Test(description = "Test for service module debug engage")
+    @Test(enabled = false, description = "Test for service module debug engage")
     public void testModuleServiceDebugScenarios() throws BallerinaTestException {
         String fileName = "hello_service.bal";
         String filePath = Paths.get(debugTestRunner.testProjectPath, fileName).toString();
@@ -62,7 +62,7 @@ public class ServiceDebugTest extends BaseTestCase {
         Assert.assertEquals(debugHitInfo.getLeft(), debugTestRunner.testBreakpoints.get(0));
     }
 
-    @Test(description = "Test for single bal file debug engage")
+    @Test(enabled = false, description = "Test for single bal file debug engage")
     public void testSingleBalFileServiceDebugScenarios() throws BallerinaTestException {
         String testProjectName = "";
         String testSingleFileName = "hello_service.bal";
@@ -75,7 +75,7 @@ public class ServiceDebugTest extends BaseTestCase {
         Assert.assertEquals(debugHitInfo.getLeft(), debugTestRunner.testBreakpoints.get(0));
     }
 
-    @AfterClass(alwaysRun = true)
+    @AfterMethod(alwaysRun = true)
     public void cleanUp() {
         debugTestRunner.terminateDebugSession();
     }

@@ -5,7 +5,7 @@ import ballerina/http;
 @test:Config {}
 function testFunc() {
     // Invoking the main function.
-    http:Client httpEndpoint = new("http://localhost:9090");
+    http:Client httpEndpoint = checkpanic new("http://localhost:9090");
 
     string responseString = "Hello World!!!";
     // Send a GET request to the specified endpoint
@@ -39,7 +39,7 @@ function testFunc() {
     if (response3 is http:Response) {
         var result = response3.getTextPayload();
         if (result is string) {
-            test:assertEquals(result, "Internal error occurred while processing the request.");
+            test:assertEquals(result, "Error occurred while processing the request.");
         } else {
             test:assertFail(msg = "Invalid response message:");
         }

@@ -18,9 +18,6 @@ import ballerina/lang.runtime as runtime;
 import ballerina/test;
 import ballerina/http;
 import ballerina/websocket;
-import ballerina/io;
-
-string data = "";
 
 service /onTextString on new websocket:Listener(21003) {
    resource isolated function get .(http:Request req) returns websocket:Service|websocket:Error {
@@ -30,28 +27,18 @@ service /onTextString on new websocket:Listener(21003) {
 
 service class WsService1 {
   *websocket:Service;
-  remote isolated function onString(websocket:Caller caller, string data) {
-      checkpanic caller->writeString(data);
+  remote isolated function onTextMessage(websocket:Caller caller, string data) {
+      checkpanic caller->writeTextMessage(data);
   }
-}
-
-service class clientPushCallbackService {
-    *websocket:Service;
-    remote function onString(websocket:Caller wsEp, string text) {
-        data = <@untainted>text;
-    }
-
-    remote isolated function onError(websocket:Caller wsEp, error err) {
-        io:println(err);
-    }
 }
 
 // Tests string support for writeString and onString
 @test:Config {}
 public function testWebsocketString() returns websocket:Error? {
-    websocket:AsyncClient wsClient = check new ("ws://localhost:21003/onTextString", new clientPushCallbackService());
-    checkpanic wsClient->writeString("Hi");
+    websocket:Client wsClient = check new ("ws://localhost:21003/onTextString");
+    checkpanic wsClient->writeTextMessage("Hi");
     runtime:sleep(5);
+    string data = check wsClient->readTextMessage();
     test:assertEquals(data, "Hi", msg = "Failed pushtext");
-    var closeResp = wsClient->close(statusCode = 1000, reason = "Close the connection", timeoutInSeconds = 180);
+    var closeResp = wsClient->close(statusCode = 1000, reason = "Close the connection", timeout = 180);
 }

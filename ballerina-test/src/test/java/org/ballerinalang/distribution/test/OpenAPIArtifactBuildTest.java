@@ -55,7 +55,7 @@ public class OpenAPIArtifactBuildTest {
         TestUtils.prepareDistribution(DISTRIBUTIONS_DIR.resolve(distributionFileName + ".zip"));
     }
 
-    @Test( description = "Check openapi to ballerina generator command", enabled = false)
+    @Test( description = "Check openapi to ballerina generator command")
     public void buildOpenAPIToBallerinaTest() throws IOException, InterruptedException {
         Path testResource = Paths.get("/openapi");
         List<String> buildArgs = new LinkedList<>();
@@ -64,12 +64,12 @@ public class OpenAPIArtifactBuildTest {
         boolean successful = TestUtils.executeOpenAPI(distributionFileName, TestUtils.getResource(testResource),
                 buildArgs);
         Assert.assertTrue(successful);
-        Assert.assertTrue(Files.exists(TestUtils.getResource(testResource).resolve("petstore-service.bal")));
-        Assert.assertTrue(Files.exists(TestUtils.getResource(testResource).resolve("petstore-client.bal")));
+        Assert.assertTrue(Files.exists(TestUtils.getResource(testResource).resolve("petstore_service.bal")));
+        Assert.assertTrue(Files.exists(TestUtils.getResource(testResource).resolve("petstore_client.bal")));
         TestUtils.deleteGeneratedFiles("petstore");
     }
 
-    @Test(description = "Check openapi to ballerina generator command with service file only.", enabled = false)
+    @Test(description = "Check openapi to ballerina generator command with service file only.")
     public void buildOpenAPIToBallerinaServiceFileGenerationTest() throws IOException,
             InterruptedException {
         Path testResource = Paths.get("/openapi");
@@ -81,11 +81,11 @@ public class OpenAPIArtifactBuildTest {
         boolean successful = TestUtils.executeOpenAPI(distributionFileName, TestUtils.getResource(testResource),
                 buildArgs);
         Assert.assertTrue(successful);
-        Assert.assertTrue(Files.exists(TestUtils.getResource(testResource).resolve("petstore-service.bal")));
+        Assert.assertTrue(Files.exists(TestUtils.getResource(testResource).resolve("petstore_service.bal")));
         TestUtils.deleteGeneratedFiles("petstore");
     }
 
-    @Test(description = "Check openapi to ballerina generator command for given tags", enabled = false)
+    @Test(description = "Check openapi to ballerina generator command for given tags", enabled = true)
     public void buildOpenAPIToBallerinaWithFilterTagsTest() throws IOException,
             InterruptedException {
         Path testResource = Paths.get("/openapi");
@@ -98,12 +98,12 @@ public class OpenAPIArtifactBuildTest {
                 buildArgs);
         Assert.assertTrue(successful);
 
-        Path expectedServiceFile = RESOURCES_PATH.resolve("openapi/expected/filteredTags.bal");
+        Path expectedServiceFile = RESOURCES_PATH.resolve("openapi/expected/filtered_tags.bal");
         Stream<String> expectedServiceLines = Files.lines(expectedServiceFile);
         String expectedService = expectedServiceLines.collect(Collectors.joining("\n"));
 
-        if (Files.exists(RESOURCES_PATH.resolve("openapi/petstoretags-service.bal"))) {
-            Path generatedServiceFile = TestUtils.getResource(testResource).resolve("petstoretags-service.bal");
+        if (Files.exists(RESOURCES_PATH.resolve("openapi/petstoretags_service.bal"))) {
+            Path generatedServiceFile = TestUtils.getResource(testResource).resolve("petstoretags_service.bal");
             Stream<String> serviceLines = Files.lines(generatedServiceFile);
             String generatedService = serviceLines.collect(Collectors.joining("\n"));
             serviceLines.close();
@@ -122,7 +122,7 @@ public class OpenAPIArtifactBuildTest {
         }
     }
 
-    @Test(description = "Check ballerina to openapi generator command", enabled = false)
+    @Test(description = "Check ballerina to openapi generator command")
     public void buildBallerinaToOpenAPITest() throws IOException, InterruptedException {
         Path testResource = Paths.get("/openapi");
         List<String> buildArgs = new LinkedList<>();
@@ -131,12 +131,12 @@ public class OpenAPIArtifactBuildTest {
         boolean successful = TestUtils.executeOpenAPI(distributionFileName, TestUtils.getResource(testResource),
                 buildArgs);
         Assert.assertTrue(successful);
-        Assert.assertTrue(Files.exists(TestUtils.getResource(testResource).resolve("hello-openapi.yaml")));
-        TestUtils.deleteGeneratedFiles("hello-openapi.yaml");
+        Assert.assertTrue(Files.exists(TestUtils.getResource(testResource).resolve("hello_openapi.yaml")));
+        TestUtils.deleteGeneratedFiles("hello_openapi.yaml");
     }
 
     //OpenAPI integration tests
-    @Test(description = "Test for openapi validator off", enabled = false)
+    @Test(description = "Test for openapi validator off")
     public void buildOpenAPIValidatorOffTest() throws IOException, InterruptedException {
 
         Path testResource = Paths.get("/openapi/integration-tests/testFiles");
@@ -144,8 +144,8 @@ public class OpenAPIArtifactBuildTest {
         buildArgs.add("openapi-validator-off.bal");
         InputStream outputs = TestUtils.executeOpenapiBuild(distributionFileName, TestUtils.getResource(testResource),
                 buildArgs);
-        String msg = "WARNING [openapi-validator-off.bal:(14:1,26:2)] Couldn't find a Ballerina service resource for the" +
-                " path";
+        String msg = "WARNING [openapi-validator-off.bal:(7:1,20:2)] Could not find a Ballerina service resource for " +
+                "the path";
         try (BufferedReader br = new BufferedReader(new InputStreamReader(outputs))) {
 
             Stream<String> logLines = br.lines();
@@ -162,7 +162,7 @@ public class OpenAPIArtifactBuildTest {
         }
     }
 
-    @Test(description = "Tests for openapi validator on", enabled = false)
+    @Test(description = "Tests for openapi validator on")
     public void buildOpenAPIValidatorONTest() throws IOException, InterruptedException {
 
         Path testResource = Paths.get("/openapi/integration-tests/testFiles");
@@ -170,7 +170,7 @@ public class OpenAPIArtifactBuildTest {
         buildArgs.add("openapi-validator-on.bal");
         InputStream outputs = TestUtils.executeOpenapiBuild(distributionFileName, TestUtils.getResource(testResource),
                 buildArgs);
-        String msg = "ERROR [openapi-validator-on.bal:(13:9,25:10)] Couldn't find a Ballerina service resource for " +
+        String msg = "ERROR [openapi-validator-on.bal:(7:1,20:2)] Could not find a Ballerina service resource for " +
                 "the path";
         try (BufferedReader br = new BufferedReader(new InputStreamReader(outputs))) {
 

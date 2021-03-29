@@ -1,28 +1,23 @@
 import ballerinax/kafka;
-import ballerina/lang.'string;
 import ballerina/log;
 
 kafka:ConsumerConfiguration consumerConfigs = {
-    // The `bootstrapServers` is the list of remote server endpoints of the
-    // Kafka brokers.
-    bootstrapServers: "localhost:9092",
-
     groupId: "group-id",
     // Subscribes to the topic `test-kafka-topic`.
     topics: ["test-kafka-topic"],
 
-    pollingIntervalInMillis: 1000,
-    keyDeserializerType: kafka:DES_BYTE_ARRAY,
-    valueDeserializerType: kafka:DES_BYTE_ARRAY,
+    pollingInterval: 1,
+
     // Set `autoCommit` to false, so that the records should be committed
     // manually.
     autoCommit: false
 };
 
-listener kafka:Listener kafkaListener = checkpanic new (consumerConfigs);
+listener kafka:Listener kafkaListener =
+        new (kafka:DEFAULT_URL, consumerConfigs);
 
 service kafka:Service on kafkaListener {
-    remote function onMessage(kafka:Caller caller,
+    remote function onConsumerRecord(kafka:Caller caller,
                                 kafka:ConsumerRecord[] records) {
         // The set of Kafka records dispatched to the service are processed one
         // by one.
@@ -43,7 +38,7 @@ function processKafkaRecord(kafka:ConsumerRecord kafkaRecord) {
     byte[] value = kafkaRecord.value;
     // The value should be a `byte[]`, since the byte[] deserializer is used
     // for the value.
-    string|error messageContent = 'string:fromBytes(value);
+    string|error messageContent = string:fromBytes(value);
     if (messageContent is string) {
         log:print("Value: " + messageContent);
     } else {

@@ -4,7 +4,7 @@ import ballerina/test;
 @test:Config {}
 function testFunc() returns @tainted error? {
     // Invoking the main function.
-    http:Client httpEndpoint = new("http://localhost:9090");
+    http:Client httpEndpoint = checkpanic new("http://localhost:9090");
     json expectedJson = {
         name: "Colombo,Sri Lanka",
         longitude: -556.49,
@@ -12,10 +12,8 @@ function testFunc() returns @tainted error? {
         altitude: 230
     };
 
-    http:Request req = new;
-    req.setHeader("x-type", "location");
     // Send a GET request to the specified endpoint.
-    var response = httpEndpoint->get("/hbr/route", message = req);
+    var response = httpEndpoint->get("/hbr/route", {"x-type": "location"});
     if (response is http:Response) {
         var realResponse = check response.getJsonPayload();
         test:assertEquals(realResponse.toJsonString(), expectedJson.toJsonString());

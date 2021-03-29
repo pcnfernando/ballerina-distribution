@@ -27,12 +27,12 @@ function beforeSuiteServiceFunc () {
 # Test function
 @test:Config{}
 function testServiceFunction ()  {
-    http:Client httpClient = new("http://localhost:9191");
+    http:Client httpClient = checkpanic new("http://localhost:9191");
     var response = httpClient->get("/sayHello");
     if (response is http:Response) {
         test:assertEquals(response.getTextPayload(), "Hello, World!", "Service involation test");
     } else {
-        test:assertFail(response.toString());
+        test:assertFail("Service invocation failed!");
     }
 }
 

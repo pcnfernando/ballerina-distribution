@@ -52,7 +52,7 @@ public class OpenAPIDistributionArtifactCheck {
                 .resolve("cache")
                 .resolve("ballerina")
                 .resolve("openapi")
-                .resolve("2.0.3")
+                .resolve("2.0.9")
                 .resolve("bir");
 
         Path jarPath = TEST_DISTRIBUTION_PATH
@@ -61,18 +61,19 @@ public class OpenAPIDistributionArtifactCheck {
                 .resolve("cache")
                 .resolve("ballerina")
                 .resolve("openapi")
-                .resolve("2.0.3")
+                .resolve("2.0.9")
                 .resolve("java11");
 
-        Path baloPath = TEST_DISTRIBUTION_PATH
+        Path balaPath = TEST_DISTRIBUTION_PATH
                 .resolve(DIST_NAME)
                 .resolve("repo")
-                .resolve("balo")
+                .resolve("bala")
                 .resolve("ballerina")
                 .resolve("openapi")
-                .resolve("2.0.3")
+                .resolve("2.0.9")
+                .resolve("any")
                 .resolve("platform")
-                .resolve("java11");
+                .resolve("any");
 
         Path breLibPath = TEST_DISTRIBUTION_PATH
                 .resolve(DIST_NAME)
@@ -92,10 +93,11 @@ public class OpenAPIDistributionArtifactCheck {
         Path docsPath = TEST_DISTRIBUTION_PATH
                 .resolve(DIST_NAME)
                 .resolve("docs")
+                .resolve("ballerina")
                 .resolve("openapi");
 
         Assert.assertTrue(Files.exists(birPath));
-        Assert.assertTrue(Files.exists(baloPath));
+        Assert.assertTrue(Files.exists(balaPath));
         Assert.assertTrue(Files.exists(jarPath.resolve("openapi.jar")));
         Assert.assertNotNull(TestUtils.findFileOrDirectory(breLibPath, "openapi-cli-"));
         Assert.assertNotNull(TestUtils.findFileOrDirectory(breLibPath, "openapi-validator-"));
@@ -106,6 +108,6 @@ public class OpenAPIDistributionArtifactCheck {
 
     @AfterClass
     public void cleanUp() throws IOException {
-        TestUtils.cleanDistribution();
+//        TestUtils.cleanDistribution();
     }
 }

@@ -1,8 +1,8 @@
-import ballerina/lang.'string;
 import ballerina/log;
 import ballerinax/rabbitmq;
 
-listener rabbitmq:Listener channelListener = checkpanic new;
+listener rabbitmq:Listener channelListener =
+        new(rabbitmq:DEFAULT_HOST, rabbitmq:DEFAULT_PORT);
 
 // The consumer service listens to the "MyQueue" queue.
 // The `ackMode` is by default rabbitmq:AUTO_ACK where messages are acknowledged
@@ -13,9 +13,9 @@ listener rabbitmq:Listener channelListener = checkpanic new;
 // Attaches the service to the listener.
 service rabbitmq:Service on channelListener {
     remote function onMessage(rabbitmq:Message message) {
-        string|error messageContent = 'string:fromBytes(message.content);
+        string|error messageContent = string:fromBytes(message.content);
         if (messageContent is string) {
-            log:print("The message received: " + messageContent);
+            log:printInfo("The message received: " + messageContent);
         } else {
             log:printError(
                         "Error occurred while retrieving the message content.");
